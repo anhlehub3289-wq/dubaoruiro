@@ -320,7 +320,8 @@ with tab_train:
         metrics = st.session_state["evaluation_metrics"]
         model_name_trained = st.session_state["model_name"]
         
-        st.markdown(f"Đang hiển thị kết quả kiểm tra của mô hình vừa huấn luyện: **{model_name_trained}**")
+        # THAY ĐỔI THEO YÊU CẦU: In đậm và tô chữ hiển thị màu xanh dương cho dòng trạng thái mô hình
+        st.markdown(f"<span style='color: #1f77b4; font-weight: bold;'>Đang hiển thị kết quả kiểm tra của mô hình vừa huấn luyện: {model_name_trained}</span>", unsafe_allow_html=True)
         
         # 1. Trình bày các chỉ tiêu vô hướng qua st.metric
         col_m1, col_m2, col_m3, col_m4 = st.columns(4)
@@ -370,9 +371,9 @@ with tab_train:
             )
             df_report = pd.DataFrame(report_dict).transpose()
 
-            # THAY ĐỔI THEO YÊU CẦU: Định dạng chữ in đậm và màu xanh dương cho các ô dữ liệu trong hình
+            # Định dạng chữ in đậm và màu xanh dương cho các ô dữ liệu
             styled_report = df_report.style.format(precision=4).map(
-                lambda v: 'color: #1f77b4; font-weight: bold;'
+                lambda v: 'color: #004085; font-weight: bold;'
             )
             st.dataframe(styled_report, use_container_width=True)
 
