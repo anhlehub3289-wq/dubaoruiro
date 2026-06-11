@@ -7,7 +7,6 @@ import io
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LogisticRegression
 from sklearn.tree import DecisionTreeClassifier
-from sklearn.random_state import RandomState
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import classification_report, confusion_matrix, accuracy_score, precision_score, recall_score, f1_score
 
@@ -346,7 +345,8 @@ with tab_train:
             # Cấu trúc văn bản nhãn hiển thị trong ô của ma trận nhầm lẫn
             z_text = [[str(y) for y in x] for x in cm]
             
-            fig_cm = ff_fig = go.Figure(data=go.Heatmap(
+            # ĐÃ ĐƯỢC CHỈNH SỬA: Loại bỏ hoàn toàn gán kép 'ff_fig =', đồng bộ duy nhất qua biến fig_cm
+            fig_cm = go.Figure(data=go.Heatmap(
                 z=cm,
                 x=['Dự đoán Hợp lệ (0)', 'Dự đoán Gian lận (1)'],
                 y=['Thực tế Hợp lệ (0)', 'Thực tế Gian lận (1)'],
@@ -371,9 +371,9 @@ with tab_train:
             df_report = pd.DataFrame(report_dict).transpose()
             st.dataframe(df_report.style.format(precision=4), use_container_width=True)
 
-# ------------------------------------------------------------------------------
+# ==============================================================================
 # THÀNH PHẦN 6: TAB "SỬ DỤNG MÔ HÌNH"
-# ------------------------------------------------------------------------------
+# ==============================================================================
 with tab_inference:
     st.subheader("🔮 Chẩn đoán & Chấm điểm giao dịch thời gian thực")
     
