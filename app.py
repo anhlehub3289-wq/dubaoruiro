@@ -320,7 +320,7 @@ with tab_train:
         metrics = st.session_state["evaluation_metrics"]
         model_name_trained = st.session_state["model_name"]
         
-        # THAY ĐỔI THEO YÊU CẦU: In đậm và tô chữ hiển thị màu xanh dương cho dòng trạng thái mô hình
+        # In đậm và tô chữ hiển thị màu xanh dương cho dòng trạng thái mô hình
         st.markdown(f"<span style='color: #1f77b4; font-weight: bold;'>Đang hiển thị kết quả kiểm tra của mô hình vừa huấn luyện: {model_name_trained}</span>", unsafe_allow_html=True)
         
         # 1. Trình bày các chỉ tiêu vô hướng qua st.metric
@@ -346,7 +346,7 @@ with tab_train:
             # Cấu trúc văn bản nhãn hiển thị trong ô của ma trận nhầm lẫn
             z_text = [[str(y) for y in x] for x in cm]
             
-            # SỬA LỖI TẠI ĐÂY: Loại bỏ phép gán trùng lặp biến ff_fig gây lỗi NameError, chỉ dùng fig_cm
+            # Chỉ sử dụng fig_cm để tối ưu hóa
             fig_cm = go.Figure(data=go.Heatmap(
                 z=cm,
                 x=['Dự đoán Hợp lệ (0)', 'Dự đoán Gian lận (1)'],
@@ -440,7 +440,8 @@ with tab_inference:
                 except:
                     prob = None
                     
-                st.markdown("#### 🟥 KẾT QUẢ PHÂN TÍCH CHẨN ĐOÁN:")
+                # THAY ĐỔI THEO YÊU CẦU: Đổi màu chữ tiêu đề trong hình sang ĐỎ và IN ĐẬM
+                st.markdown("<h4 style='color: #ff0000; font-weight: bold;'>🟥 KẾT QUẢ PHÂN TÍCH CHẨN ĐOÁN:</h4>", unsafe_allow_html=True)
                 
                 if prediction == 1:
                     st.error("🚨 **CẢNH BÁO: Giao dịch này có dấu hiệu GIAN LẬN / RỦI RO CAO!**")
@@ -470,52 +471,4 @@ with tab_inference:
             )
             
             if bulk_file is not None:
-                df_bulk, err_bulk = load_data(bulk_file.getvalue(), bulk_file.name)
-                
-                if err_bulk:
-                    st.error(err_bulk)
-                else:
-                    # Kiểm tra sự tương thích của schema
-                    missing_bulk_cols = [c for c in features if c not in df_bulk.columns]
-                    
-                    if missing_bulk_cols:
-                        st.error(f"❌ Tệp tải lên không hợp lệ. Thiếu các cột đặc trưng bắt buộc sau: {missing_bulk_cols}")
-                    else:
-                        # Chỉ lọc lấy đúng 14 cột đưa vào mô hình chấm điểm theo đúng thứ tự lúc train
-                        X_bulk = df_bulk[features]
-                        
-                        # Dự báo hàng loạt
-                        bulk_predictions = model.predict(X_bulk)
-                        
-                        # Gắn kết quả dự báo trực tiếp vào dataframe gốc hiển thị cho người dùng
-                        df_result = df_bulk.copy()
-                        df_result["Du_Bao_Gian_Lan"] = bulk_predictions
-                        
-                        try:
-                            bulk_probs = model.predict_proba(X_bulk)[:, 1]
-                            df_result["Xac_Suat_Rui_Ro"] = bulk_probs
-                        except:
-                            pass
-                            
-                        st.success(f"🎉 Đã thực hiện chấm điểm thành công cho toàn bộ {df_bulk.shape[0]} dòng giao dịch!")
-                        
-                        # Thống kê nhanh kết quả vừa dự báo
-                        fraud_count = int((bulk_predictions == 1).sum())
-                        st.warning(f"📊 Phát hiện **{fraud_count}** giao dịch tiềm ẩn rủi ro gian lận trên tổng số **{df_bulk.shape[0]}** giao dịch vừa nạp.")
-                        
-                        # Hiển thị bảng kết quả trong một khung cuộn cố định chiều cao
-                        st.markdown("👉 Bảng chi tiết kết quả dự báo:")
-                        st.dataframe(df_result, use_container_width=True)
-                        
-                        # Tạo nút download xuất dữ liệu kết quả kèm mã UTF-8-sig chống lỗi font
-                        csv_buffer = io.StringIO()
-                        df_result.to_csv(csv_buffer, index=False, encoding="utf-8-sig")
-                        csv_output = csv_buffer.getvalue()
-                        
-                        st.download_button(
-                            label="📥 Tải xuống bảng kết quả dạng CSV",
-                            data=csv_output,
-                            file_name="ket_qua_du_bao_gian_lan.csv",
-                            mime="text/csv",
-                            use_container_width=True
-                        )
+                df_bulk, err_bulk = load_data(bulk_file.getvalue(), bulk_
