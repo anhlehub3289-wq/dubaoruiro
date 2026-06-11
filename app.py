@@ -117,7 +117,7 @@ with st.sidebar:
 # ==============================================================================
 # HEADER — VÙNG ĐỊNH HƯỚNG
 # ==============================================================================
-st.title("🛡️ Hệ thống Học máy Phát hiện Giao dịch Gian lận")
+st.title("😎 Hệ thống Học máy Phát hiện giao dịch gian lận tại AGRIBANK 😎")
 st.caption("Ứng dụng hỗ trợ phân tích rủi ro tài chính và phân loại giao dịch gian lận tự động dựa trên các chỉ số hoạt động.")
 
 # Biến lưu trữ dữ liệu chính toàn app
