@@ -345,7 +345,7 @@ with tab_train:
             # Cấu trúc văn bản nhãn hiển thị trong ô của ma trận nhầm lẫn
             z_text = [[str(y) for y in x] for x in cm]
             
-            # ĐÃ ĐƯỢC CHỈNH SỬA: Loại bỏ hoàn toàn gán kép 'ff_fig =', đồng bộ duy nhất qua biến fig_cm
+            # SỬA LỖI TẠI ĐÂY: Loại bỏ phép gán trùng lặp biến ff_fig gây lỗi NameError, chỉ dùng fig_cm
             fig_cm = go.Figure(data=go.Heatmap(
                 z=cm,
                 x=['Dự đoán Hợp lệ (0)', 'Dự đoán Gian lận (1)'],
@@ -369,7 +369,12 @@ with tab_train:
                 output_dict=True
             )
             df_report = pd.DataFrame(report_dict).transpose()
-            st.dataframe(df_report.style.format(precision=4), use_container_width=True)
+
+            # THAY ĐỔI THEO YÊU CẦU: Định dạng chữ in đậm và màu xanh dương cho các ô dữ liệu trong hình
+            styled_report = df_report.style.format(precision=4).map(
+                lambda v: 'color: #1f77b4; font-weight: bold;'
+            )
+            st.dataframe(styled_report, use_container_width=True)
 
 # ==============================================================================
 # THÀNH PHẦN 6: TAB "SỬ DỤNG MÔ HÌNH"
